@@ -5,8 +5,6 @@
  */
 package cs102dz03;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +13,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Random;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 /**
@@ -25,10 +26,16 @@ import javax.swing.Timer;
 public class Logika {
     
     private TextArea txtPitanje;
+    private TextField txtOdgovor;
+    private Label lblStatistika, lblPercentage;
+    private ProgressBar pBar;
     
     protected Podaci podaci;
     private ArrayList< Integer > bilaPitanja;
-    private int protekloVreme;
+    protected int protekloVreme;
+    private PitanjeSP trenutnoPitanje;
+    
+    private boolean krajIgre; // za ProgressBarThread
     
     private Timer timer;
 
@@ -36,10 +43,15 @@ public class Logika {
         inicijalna();
     }
     
-    public Logika(TextArea txtPitanje)
+    public Logika(TextArea txtPitanje, TextField txtOdgovor, Label lblStatistika,
+            ProgressBar pBar, Label lblPercentage)
     {
         inicijalna();
         setTxtPitanje(txtPitanje);
+        setTxtOdgovor(txtOdgovor);
+        setLblStatistika(lblStatistika);
+        setProgressBar(pBar);
+        setLblPercentage(lblPercentage);
     }
     
     private void inicijalna()
@@ -48,24 +60,40 @@ public class Logika {
         bilaPitanja = new ArrayList<>();
         protekloVreme = 0;
         
-        pokupiPodatke();
-        
-        timer = new Timer(1000, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                protekloVreme++;
-                if(protekloVreme == 10)
-                    handleProsloVreme();
-            }
-        });
+        pokupiPodatke();        
         
         txtPitanje = new TextArea();
+        txtOdgovor = new TextField();
+        lblStatistika = new Label();
+        pBar = new ProgressBar();
+        lblPercentage = new Label();
+        
+        krajIgre = false;
     }
     
     public void setTxtPitanje(TextArea txtPitanje)
     {
         this.txtPitanje = txtPitanje;
+    }
+    
+    public void setTxtOdgovor(TextField txtOdgovor)
+    {
+        this.txtOdgovor = txtOdgovor;
+    }
+    
+    public void setLblStatistika(Label lblStatistika)
+    {
+        this.lblStatistika = lblStatistika;
+    }
+    
+    public void setProgressBar(ProgressBar pBar)
+    {
+        this.pBar = pBar;
+    }
+    
+    public void setLblPercentage(Label lblPercentage)
+    {
+        this.lblPercentage = lblPercentage;
     }
     
     private void pokupiPodatke()
@@ -102,7 +130,7 @@ public class Logika {
     {
         Random r = new Random();
         int idx;
-        while(biloPitanje(idx = r.nextInt())) ;
+        while(biloPitanje(idx = r.nextInt(podaci.getPitanjaSize()))) ;
         bilaPitanja.add(idx);
         return podaci.getPitanje(idx);
     }
@@ -128,14 +156,89 @@ public class Logika {
             podaci.incrementTacni();
         else
             podaci.incrementNetacni();
+        
+        setLabelText(lblStatistika, "Statistika  |  Tačnih: " + podaci.getTacni() +
+                "   :   Netačnih: " + podaci.getNetacni());
+        
+        System.out.println("Dat odg: " + odgovor + "\tTacan odg: " + pitanje.getOdgovor() + "\t\t" +
+                (pitanje.getOdgovor().toUpperCase().equals(odgovor.toUpperCase()) ? "TACNO" : "NETACNO"));
     }
     
-    public void handleProsloVreme()
+    public void handleProsloVremeIliDatOdgovor()
     {
         if(bilaPitanja.size() < 10)
-            System.out.println("");
+        {
+            if(bilaPitanja.size() > 0)
+                proveriOdgovor(trenutnoPitanje, txtOdgovor.getText());
+            
+            trenutnoPitanje = dajPitanje();
+            protekloVreme = 0;
+        }
+        else
+        {
+            showMessageBox("Igra je završena!", "Ko zna - zna", new Object[]{ "Izađi" });
+        }
+        
+        txtOdgovor.setText("");
+        txtOdgovor.requestFocus();
     }
     
+    private void showMessageBox(String poruka, String naslov, Object[] opcije)
+    {
+        int tipOpcije;
+        switch(opcije.length)
+        {
+            case 1:
+                tipOpcije = JOptionPane.OK_OPTION;
+                break;
+            case 2:
+                tipOpcije = JOptionPane.YES_NO_OPTION;
+                break;
+            default:
+                tipOpcije = JOptionPane.YES_NO_CANCEL_OPTION;
+        }
+                
+        int n = JOptionPane.showOptionDialog(null, poruka, naslov, tipOpcije,
+                JOptionPane.QUESTION_MESSAGE, null, opcije, opcije[0]);
+        
+        switch(n)
+        {
+            case 0:
+                if(opcije.length == 1)
+                {
+                    krajIgre = true;
+                    System.exit(0);
+                }
+                break;
+        }
+    }
     
+    public void startTimer()
+    {
+        timer.start();
+        handleProsloVremeIliDatOdgovor();
+    }
+    
+    public void handleBtnSubmit()
+    {
+        handleProsloVremeIliDatOdgovor();
+    }
+
+    public PitanjeSP getTrenutnoPitanje() {
+        return trenutnoPitanje;
+    }
+    
+    public int getBilaPitanjaSize()
+    {
+        return bilaPitanja.size();
+    }
+
+    public int getProtekloVreme() {
+        return protekloVreme;
+    }
+
+    public boolean isKrajIgre() {
+        return krajIgre;
+    }
     
 }

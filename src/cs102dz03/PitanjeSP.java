@@ -11,7 +11,7 @@ package cs102dz03;
  */
 public class PitanjeSP {
 
-    String pitanje, odgovor;
+    private String pitanje, odgovor;
 
     public PitanjeSP(String pitanje, String odgovor) {
         this.pitanje = pitanje;
