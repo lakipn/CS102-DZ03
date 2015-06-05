@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -152,7 +154,8 @@ public class Logika {
     
     public void proveriOdgovor(PitanjeSP pitanje, String odgovor)
     {
-        if(pitanje.getOdgovor().toUpperCase().equals(odgovor.toUpperCase()))
+        if(pitanje.getOdgovor().toUpperCase().equals(odgovor.toUpperCase()) ||
+                konvertujSrpskuLatinicuUEnglesku(pitanje.getOdgovor().toUpperCase()).equals(odgovor.toUpperCase()))
             podaci.incrementTacni();
         else
             podaci.incrementNetacni();
@@ -239,6 +242,17 @@ public class Logika {
 
     public boolean isKrajIgre() {
         return krajIgre;
+    }
+    
+    private String konvertujSrpskuLatinicuUEnglesku(String temp)
+    {
+        temp = temp.replaceAll("Š", "S");
+        temp = temp.replaceAll("Đ", "DJ");
+        temp = temp.replaceAll("Ž", "Z");
+        temp = temp.replaceAll("Č", "C");
+        temp = temp.replaceAll("Ć", "C");
+        
+        return temp;
     }
     
 }
