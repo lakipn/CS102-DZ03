@@ -17,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -77,9 +79,7 @@ public class CS102DZ03 extends Application {
                     mozak.protekloVreme++;
                     if(mozak.protekloVreme == 10)
                     {
-                        mozak.handleProsloVremeIliDatOdgovor();
-                        txtPitanje.setText(mozak.getTrenutnoPitanje().getPitanje());
-                        lblBrojPitanja.setText("Redni broj pitanja: " + (mozak.getBilaPitanjaSize()));
+                        handleSledecePitanje();
                     }
                 });
                 
@@ -101,7 +101,16 @@ public class CS102DZ03 extends Application {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 
                 Platform.runLater(() -> {
-                    lblPercentage.setText("Preostalo vreme: " + (9 - mozak.protekloVreme) + " sekundi");
+                    int preostaloVreme = 10 - mozak.protekloVreme;
+                    String sekundiFormatirano;
+                    if( preostaloVreme >= 5 )
+                        sekundiFormatirano = " sekundi";
+                    else if( preostaloVreme == 1 )
+                        sekundiFormatirano = " sekund";
+                    else
+                        sekundiFormatirano = " sekunde";
+                        
+                    lblPercentage.setText("Preostalo vreme: " + preostaloVreme + sekundiFormatirano);
                 });
                 
             }
@@ -114,6 +123,13 @@ public class CS102DZ03 extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+    
+    private void handleSledecePitanje()
+    {
+        mozak.handleProsloVremeIliDatOdgovor();
+        txtPitanje.setText(mozak.getTrenutnoPitanje().getPitanje());
+        lblBrojPitanja.setText("Redni broj pitanja: " + mozak.getBilaPitanjaSize());
     }
     
     private void setLblBrojPitanjaOnPane()
@@ -148,9 +164,7 @@ public class CS102DZ03 extends Application {
 
             @Override
             public void handle(ActionEvent event) {
-                mozak.handleProsloVremeIliDatOdgovor();
-                txtPitanje.setText(mozak.getTrenutnoPitanje().getPitanje());
-                lblBrojPitanja.setText("Redni broj pitanja: " + mozak.getBilaPitanjaSize());
+                handleSledecePitanje();
             }
         });
         
@@ -173,6 +187,15 @@ public class CS102DZ03 extends Application {
         txtOdgovor.setPrefWidth(350);
         txtOdgovor.setPrefHeight(30);
         txtOdgovor.setFont(Font.font("Arial", 20));
+        
+        txtOdgovor.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER))
+                    handleSledecePitanje();
+            }
+        });
         
         root.getChildren().add(txtOdgovor);
     }
