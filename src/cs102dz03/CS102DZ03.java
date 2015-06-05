@@ -77,7 +77,7 @@ public class CS102DZ03 extends Application {
                 Platform.runLater(() ->
                 {   
                     mozak.protekloVreme++;
-                    if(mozak.protekloVreme == 10)
+                    if(mozak.protekloVreme == 13)
                     {
                         handleSledecePitanje();
                     }
@@ -101,7 +101,7 @@ public class CS102DZ03 extends Application {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 
                 Platform.runLater(() -> {
-                    int preostaloVreme = 10 - mozak.protekloVreme;
+                    int preostaloVreme = 13 - mozak.protekloVreme;
                     String sekundiFormatirano;
                     if( preostaloVreme >= 5 )
                         sekundiFormatirano = " sekundi";

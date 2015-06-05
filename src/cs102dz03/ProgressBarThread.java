@@ -57,7 +57,7 @@ public class ProgressBarThread implements Runnable {
             if(biloProtekloVreme != logika.getProtekloVreme())
             {
                 biloProtekloVreme = logika.getProtekloVreme();
-                double prog = 0.1 * (biloProtekloVreme + 1);
+                double prog = (1.0 * (biloProtekloVreme + 1)) / 13;
                 pBar.setProgress(prog);
             }
             try {
