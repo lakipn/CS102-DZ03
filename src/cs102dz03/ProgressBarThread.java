@@ -59,7 +59,6 @@ public class ProgressBarThread implements Runnable {
                 biloProtekloVreme = logika.getProtekloVreme();
                 double prog = 0.1 * (biloProtekloVreme + 1);
                 pBar.setProgress(prog);
-                System.out.println("Proteklo: " + biloProtekloVreme + " sekundi.");
             }
             try {
                 //System.out.println("Proteklo: " + logika.getProtekloVreme() + " sekundi.");

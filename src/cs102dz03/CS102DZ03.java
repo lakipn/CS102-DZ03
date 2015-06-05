@@ -42,15 +42,15 @@ public class CS102DZ03 extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        lblBrojPitanja = new Label("Redni broj pitanja: 1");
-        lblOdgovor = new Label("Odgovor: ");
-        lblStatistika = new Label("Statistika  |  Tačnih: 0   :   Netačnih: 0");
-        txtPitanje = new TextArea("Koliko očiju ima baba ?");
+        lblBrojPitanja = new Label();
+        lblOdgovor = new Label("Odgovor:");
+        lblStatistika = new Label();
+        txtPitanje = new TextArea();
         txtOdgovor = new TextField("");
         btnSubmit = new Button("Potvrdi");
         btnExit = new Button("Izađi");
         pBar = new ProgressBar();
-        lblPercentage = new Label("Preostalo vreme: 9.99 sekundi");
+        lblPercentage = new Label();
                       
         root = new Pane();
         
