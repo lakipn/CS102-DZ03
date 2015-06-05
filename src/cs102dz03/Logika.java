@@ -160,8 +160,8 @@ public class Logika {
         setLabelText(lblStatistika, "Statistika  |  Tačnih: " + podaci.getTacni() +
                 "   :   Netačnih: " + podaci.getNetacni());
         
-        System.out.println("Dat odg: " + odgovor + "\tTacan odg: " + pitanje.getOdgovor() + "\t\t" +
-                (pitanje.getOdgovor().toUpperCase().equals(odgovor.toUpperCase()) ? "TACNO" : "NETACNO"));
+//        System.out.println("Dat odg: " + odgovor + "\tTacan odg: " + pitanje.getOdgovor() + "\t\t" +
+//                (pitanje.getOdgovor().toUpperCase().equals(odgovor.toUpperCase()) ? "TACNO" : "NETACNO"));
     }
     
     public void handleProsloVremeIliDatOdgovor()
