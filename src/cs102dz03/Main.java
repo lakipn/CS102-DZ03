@@ -39,7 +39,11 @@ public class Main extends Application {
     
     private Logika mozak;
     Timer timer;
-    
+
+    /**
+     * Start method.
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         lblBrojPitanja = new Label();
