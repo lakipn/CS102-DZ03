@@ -41,7 +41,7 @@ public class Main extends Application {
     Timer timer;
 
     /**
-     * Start method.
+     * Start metoda.
      * @param primaryStage
      */
     @Override
